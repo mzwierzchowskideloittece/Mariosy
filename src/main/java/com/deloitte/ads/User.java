@@ -91,7 +91,7 @@ public class User {
             System.out.println(++numerate);
             System.out.println("Type: " + sentMarios.getType());
             System.out.print("Sent to: ");
-            sentMarios.getTo().stream().forEach(user -> System.out.print(user.getFirstName() + user.getLastName() + "\n"));
+            sentMarios.getTo().stream().forEach(user -> System.out.print(user.getFirstName() + " " + user.getLastName() + "\n"));
             System.out.print("Comment: " + sentMarios.getComment());
         }
     }
