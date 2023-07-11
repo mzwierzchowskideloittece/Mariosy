@@ -1,4 +1,6 @@
-package com.deloitte.ads;
+package com.deloitte.ads.repository;
+
+import com.deloitte.ads.repository.Marios;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,17 +8,19 @@ import java.util.regex.Pattern;
 
 public class User {
 
+    private int id;
     private String email;
     private String firstName;
     private String lastName;
     private Set<Marios> receivedMariosy;
     private Set<Marios> sentMariosy;
 
-    public User(String email, String firstName, String lastName) {
+    public User(int id, String email, String firstName, String lastName) {
 
         if(email == null || firstName == null || lastName == null || !Pattern.compile("^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@"
                 + "[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$").matcher(email).matches()) throw new IllegalArgumentException("Wrong input");
 
+        this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;

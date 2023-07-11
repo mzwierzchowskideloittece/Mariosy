@@ -1,5 +1,6 @@
-package com.deloitte.ads;
+package com.deloitte.ads.repository;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 public class Marios {
@@ -8,18 +9,22 @@ public class Marios {
         HAPPY, SAD, MAD, AMUSED, FUNNY, FOOTBALL
     }
 
+    private int id;
     private TypeEnum type;
     private String comment;
     private User from;
     private Set<User> to;
+    private LocalDate creationDate;
 
 
-    public Marios(TypeEnum type, String comment, User from, Set<User> to) {
+    public Marios(int id, TypeEnum type, String comment, User from, Set<User> to) {
         if(comment == null) comment = "";
+        this.id = id;
         this.type = type;
         this.comment = comment;
         this.from = from;
         this.to = to;
+        creationDate = LocalDate.now();
     }
 
     public TypeEnum getType(){
