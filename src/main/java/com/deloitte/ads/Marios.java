@@ -1,28 +1,25 @@
 package com.deloitte.ads;
 
+import java.util.Set;
+
 public class Marios {
 
     public enum TypeEnum {
         HAPPY, SAD, MAD, AMUSED, FUNNY, FOOTBALL
     }
 
-    private int id;
     private TypeEnum type;
     private String comment;
-    private int from;
-    private int to;
+    private User from;
+    private Set<User> to;
 
 
-    public Marios(int id, TypeEnum type, String comment, int from, int to) {
-        this.id = id;
+    public Marios(TypeEnum type, String comment, User from, Set<User> to) {
+        if(comment == null) comment = "";
         this.type = type;
         this.comment = comment;
         this.from = from;
         this.to = to;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public TypeEnum getType(){
@@ -41,19 +38,12 @@ public class Marios {
         this.comment = comment;
     }
 
-    public int getFrom() {
+    public User getFrom() {
         return from;
     }
 
-    public void setFrom(int from) {
-        this.from = from;
-    }
-
-    public int getTo() {
+    public Set<User> getTo() {
         return to;
     }
 
-    public void setTo(int to) {
-        this.to = to;
-    }
 }
