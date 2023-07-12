@@ -18,7 +18,7 @@ public class Marios {
 
 
     public Marios(int id, TypeEnum type, String comment, User from, Set<User> to) {
-        if(comment == null) comment = "";
+        if (comment == null) comment = "";
         this.id = id;
         this.type = type;
         this.comment = comment;
@@ -27,9 +27,9 @@ public class Marios {
         creationDate = LocalDate.now();
     }
 
-    public TypeEnum getType(){
-        return type;
-    }
+    public int getId() { return id; }
+
+    public TypeEnum getType() { return type; }
 
     public void setType(TypeEnum type) {
         this.type = type;
