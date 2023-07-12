@@ -31,8 +31,8 @@ public class UserController {
     }
 
     @PostMapping
-    public void addUser(@RequestBody UserDTO userDTO) {
-        app.addUser(userDTO.getEmail(), userDTO.getFirstName(), userDTO.getLastName());
+    public User addUser(@RequestBody UserDTO userDTO) {
+        return app.addUser(userDTO.getEmail(), userDTO.getFirstName(), userDTO.getLastName());
     }
 
 

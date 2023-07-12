@@ -32,6 +32,11 @@ public class App {
         return users;
     }
 
+    public Set<Marios> getMariosy() {
+        return mariosy;
+    }
+
+
     public Set<Marios> getUserSentMariosy(int id) {
 
         return mariosy.stream().filter(marios -> marios.getFrom().getId() == id).collect(Collectors.toSet());
