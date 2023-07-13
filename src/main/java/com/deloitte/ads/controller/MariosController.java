@@ -1,7 +1,7 @@
 package com.deloitte.ads.controller;
 
 import com.deloitte.ads.repository.Marios;
-import com.deloitte.ads.service.App;
+import com.deloitte.ads.service.SomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +12,15 @@ import java.util.Set;
 public class MariosController {
 
     @Autowired
-    private App app;
+    private SomeService someService;
 
     @GetMapping()
-    public Set<Marios> getMariosy() { return app.getMariosy(); }
+    public Set<Marios> getMariosy() {
+        return someService.getMariosy();
+    }
 
     @PostMapping
     public void sendMarios(@RequestBody MariosDTO mariosDTO) {
-        app.sendMarios(mariosDTO.getType(), mariosDTO.getComment(), mariosDTO.getFrom(), mariosDTO.getTo());
+        someService.addMarios(mariosDTO.getType(), mariosDTO.getComment(), mariosDTO.getFrom(), mariosDTO.getTo());
     }
 }

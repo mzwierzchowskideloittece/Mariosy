@@ -1,7 +1,6 @@
 package com.deloitte.ads;
 
 
-import com.deloitte.ads.service.App;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

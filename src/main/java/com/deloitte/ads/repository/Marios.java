@@ -1,33 +1,47 @@
 package com.deloitte.ads.repository;
 
-import java.time.LocalDate;
+import javax.persistence.*;
+import java.time.Instant;
 import java.util.Set;
 
+@Entity(name = "marios")
 public class Marios {
 
     public enum TypeEnum {
         HAPPY, SAD, MAD, AMUSED, FUNNY, FOOTBALL
     }
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "marios_id")
+    private Long id;
+
+    @Column(name = "type")
     private TypeEnum type;
+
+    @Column(name = "comment")
     private String comment;
-    private User from;
-    private Set<User> to;
-    private LocalDate creationDate;
 
+    @Column(name = "creation_date")
+    private Instant creationDate;
 
-    public Marios(int id, TypeEnum type, String comment, User from, Set<User> to) {
-        if (comment == null) comment = "";
-        this.id = id;
+    @ManyToMany(mappedBy = "receivedMariosy")
+    private Set<User> receivers;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User sender;
+
+    public Marios() {}
+
+    public Marios(TypeEnum type, String comment) {
+
         this.type = type;
         this.comment = comment;
-        this.from = from;
-        this.to = to;
-        creationDate = LocalDate.now();
+        this.creationDate = Instant.now();
     }
 
-    public int getId() { return id; }
+    public Long getId() { return id; }
 
     public TypeEnum getType() { return type; }
 
@@ -43,12 +57,21 @@ public class Marios {
         this.comment = comment;
     }
 
-    public User getFrom() {
-        return from;
+    public Instant getCreationDate() { return creationDate; }
+
+    public Set<User> getReceivers() {
+        return receivers;
     }
 
-    public Set<User> getTo() {
-        return to;
+    public void setReceivers(Set<User> receivers) {
+        this.receivers = receivers;
     }
 
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
 }

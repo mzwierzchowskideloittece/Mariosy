@@ -21,7 +21,7 @@ class MariosControllerTest {
 
     @Test
     void sendMarios() {
-
+        // given
         Set<Marios> mariosyBeforeSending = mariosController.getMariosy();
         Integer count = mariosyBeforeSending.size();
 
@@ -41,8 +41,10 @@ class MariosControllerTest {
         mariosDTO.setFrom(userController.addUser(userDTO1));
         mariosDTO.setTo(Sets.newHashSet(userController.addUser(userDTO2)));
 
+        // when
         mariosController.sendMarios(mariosDTO);
 
+        // then
         Set<Marios> mariosyAfterSending = mariosController.getMariosy();
 
         Assertions.assertEquals(count+1, mariosyAfterSending.size());
