@@ -2,45 +2,42 @@ package com.deloitte.ads.controller;
 
 import com.deloitte.ads.repository.Marios;
 import com.deloitte.ads.repository.User;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MariosDTO {
 
-    private Marios.TypeEnum type;
+    private String type;
+
+    @Getter @Setter
     private String comment;
-    private User from;
-    private Set<User> to;
+
+    @Getter @Setter
+    private String fromEmail;
+
+    @Getter @Setter
+    private Set<String> toEmails;
+
+    public MariosDTO(Marios marios) {
+
+        this.type = marios.getType().name();
+        this.comment = marios.getComment();
+        this.fromEmail = marios.getSender().getEmail();
+        this.toEmails = marios.getReceivers().stream()
+                .map(User::getEmail)
+                .collect(Collectors.toSet());
+
+    }
 
     public Marios.TypeEnum getType() {
-        return type;
+        return Marios.TypeEnum.valueOf(type.toUpperCase());
     }
 
     public void setType(Marios.TypeEnum type) {
-        this.type = type;
+        this.type = type.name();
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public User getFrom() {
-        return from;
-    }
-
-    public void setFrom(User from) {
-        this.from = from;
-    }
-
-    public Set<User> getTo() {
-        return to;
-    }
-
-    public void setTo(Set<User> to) {
-        this.to = to;
-    }
 }

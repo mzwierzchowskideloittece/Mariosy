@@ -1,5 +1,10 @@
 package com.deloitte.ads.repository;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Set;
@@ -13,65 +18,59 @@ public class Marios {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     @Column(name = "marios_id")
+    @Getter
     private Long id;
 
     @Column(name = "type")
-    private TypeEnum type;
+    private String type;
 
     @Column(name = "comment")
+    @Getter @Setter
     private String comment;
 
     @Column(name = "creation_date")
+    @Getter
     private Instant creationDate;
 
-    @ManyToMany(mappedBy = "receivedMariosy")
+    @ManyToMany
+    @JsonBackReference
+    @JoinTable(
+            name = "user_data_received_marios",
+            joinColumns = @JoinColumn(name = "marios_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Getter @Setter
     private Set<User> receivers;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="user_id")
+    @Getter @Setter
     private User sender;
 
     public Marios() {}
 
-    public Marios(TypeEnum type, String comment) {
+    private Marios(String type, String comment) {
 
         this.type = type;
         this.comment = comment;
         this.creationDate = Instant.now();
+
     }
 
-    public Long getId() { return id; }
-
-    public TypeEnum getType() { return type; }
+    public TypeEnum getType() { return TypeEnum.valueOf(type.toUpperCase()); }
 
     public void setType(TypeEnum type) {
-        this.type = type;
+        this.type = type.name();
     }
 
-    public String getComment() {
-        return comment;
-    }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+    public static Marios createMarios(TypeEnum type, String comment) {
 
-    public Instant getCreationDate() { return creationDate; }
+        if(comment == null) comment = "";
 
-    public Set<User> getReceivers() {
-        return receivers;
-    }
+        return new Marios(type.name(), comment);
 
-    public void setReceivers(Set<User> receivers) {
-        this.receivers = receivers;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
     }
 }
