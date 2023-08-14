@@ -1,0 +1,595 @@
+{
+	"info": {
+		"_postman_id": "522c54d5-d131-4140-8ca4-81ad306f7cff",
+		"name": "Marios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28571971"
+	},
+	"item": [
+		{
+			"name": "TestGETUser",
+			"item": [
+				{
+					"name": "ShouldGetUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Getting user\", function(){\r",
+									"\r",
+									"    pm.expect(pm.response.code, \"not 200\").to.equal(200);\r",
+									"    let user = JSON.parse(pm.collectionVariables.get(\"addedSender\"));\r",
+									"\r",
+									"    pm.expect(pm.response.json().firstName, \"Wrong first name\").to.equals(user.firstName);\r",
+									"    pm.expect(pm.response.json().lastName, \"Wrong last name\").to.equals(user.lastName);\r",
+									"    pm.expect(pm.response.json().email, \"Wrong email\").to.equals(user.email);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{addedSenderId}}/get",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{addedSenderId}}",
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ShouldGetAllUsers",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Getting all users\", function(){\r",
+									"\r",
+									"    pm.expect(pm.response.code, \"not 200\").to.equal(200);\r",
+									"\r",
+									"    let addedUserId = pm.collectionVariables.get(\"addedSenderId\");\r",
+									"    let addedUser = JSON.parse(pm.collectionVariables.get(\"addedSender\"));\r",
+									"    \r",
+									"    json = pm.response.json();\r",
+									"\r",
+									"    let found = false;\r",
+									"\r",
+									"    json.forEach(function(user) { \r",
+									"        if(user.externalId == addedUserId) {\r",
+									"            found = true;\r",
+									"\r",
+									"            pm.expect(user.firstName, \"Incorrect first name\").to.equal(addedUser.firstName);\r",
+									"            pm.expect(user.lastName, \"Incorrect last name\").to.equal(addedUser.lastName);\r",
+									"            pm.expect(user.email, \"Incorrect email\").to.equal(addedUser.email);\r",
+									"        }\r",
+									"    });\r",
+									"\r",
+									"    pm.expect(found, \"user not found\").to.equal(true);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ShouldGetSentMariosSetOfUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Getting sent marios of a user\", function(){\r",
+									"\r",
+									"    pm.expect(pm.response.code, \"not 200\").to.equal(200);\r",
+									"\r",
+									"    let addedMariosId = pm.collectionVariables.get(\"addedMariosId\");\r",
+									"    let addedMarios = JSON.parse(pm.collectionVariables.get(\"addedMarios\"));\r",
+									"    \r",
+									"    json = pm.response.json();\r",
+									"\r",
+									"    let found = false;\r",
+									"\r",
+									"    json.forEach(function(marios) { \r",
+									"        if(marios.externalId == addedMariosId) {\r",
+									"            found = true;\r",
+									"\r",
+									"            pm.expect(marios.type, \"Incorrect type\").to.equal(addedMarios.type);\r",
+									"            pm.expect(marios.comment, \"Incorrect comment\").to.equal(addedMarios.comment);\r",
+									"            pm.expect(marios.fromExternalId, \"Incorrect sender ID\").to.equal(addedMarios.fromExternalId);\r",
+									"            for(let i in addedMarios.toExternalIds){\r",
+									"                pm.expect(marios.toExternalIds[i], \"Incorrect receivers IDs\").to.equal(addedMarios.toExternalIds[i]);\r",
+									"            }\r",
+									"        }\r",
+									"    });\r",
+									"\r",
+									"    pm.expect(found, \"marios not found\").to.be.true;\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{addedSenderId}}/sent",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{addedSenderId}}",
+								"sent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ShouldGetReceivedMariosSetOfUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Getting received marios of a user\", function(){\r",
+									"\r",
+									"    pm.expect(pm.response.code, \"not 200\").to.equal(200);\r",
+									"\r",
+									"    let addedMariosId = pm.collectionVariables.get(\"addedMariosId\");\r",
+									"    let addedMarios = JSON.parse(pm.collectionVariables.get(\"addedMarios\"));\r",
+									"    \r",
+									"    let json = pm.response.json();\r",
+									"\r",
+									"    let found = false;\r",
+									"\r",
+									"    json.forEach(function(marios) { \r",
+									"        if(marios.externalId == addedMariosId) {\r",
+									"            found = true;\r",
+									"\r",
+									"            pm.expect(marios.type, \"Incorrect type\").to.equal(addedMarios.type);\r",
+									"            pm.expect(marios.comment, \"Incorrect comment\").to.equal(addedMarios.comment);\r",
+									"            pm.expect(marios.fromExternalId, \"Incorrect sender ID\").to.equal(addedMarios.fromExternalId);\r",
+									"\r",
+									"            for(let i in addedMarios.toExternalIds){\r",
+									"                pm.expect(marios.toExternalIds[i], \"Incorrect receivers IDs\").to.equal(addedMarios.toExternalIds[i]);\r",
+									"            }\r",
+									"        }\r",
+									"    });\r",
+									"\r",
+									"    pm.expect(found, \"marios not found\").to.be.true;\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/{{addedReceiverId}}/received",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{addedReceiverId}}",
+								"received"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "TestPOSTMarios",
+			"item": [
+				{
+					"name": "ShouldAddMarios",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let marios = pm.iterationData.get(\"marios\");\r",
+									"\r",
+									"let set = new Set();\r",
+									"set.add(pm.collectionVariables.get(\"addedReceiverId\"));\r",
+									"\r",
+									"pm.variables.set(\"type\", JSON.stringify(marios.type));\r",
+									"pm.variables.set(\"comment\", JSON.stringify(marios.comment));\r",
+									"pm.variables.set(\"fromId\", JSON.stringify(pm.collectionVariables.get(\"addedSenderId\")));\r",
+									"pm.variables.set(\"toIds\", JSON.stringify([...set]));\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Should add marios\", function(){\r",
+									"\r",
+									"    let type = JSON.parse(pm.variables.get(\"type\"));\r",
+									"    let comment = JSON.parse(pm.variables.get(\"comment\"));\r",
+									"    let fromId = JSON.parse(pm.variables.get(\"fromId\"));\r",
+									"    let toIds = JSON.parse(pm.variables.get(\"toIds\"));\r",
+									"\r",
+									"    \r",
+									"    if(type != null && type != \"\" && (type == \"HAPPY\" || type == \"SAD\" || type == \"MAD\" || type == \"AMUSED\" || type == \"FUNNY\" || type == \"FOOTBALL\")) {\r",
+									"\r",
+									"        pm.expect(pm.response.code, \"not 200\").to.equal(200);\r",
+									"\r",
+									"        json = pm.response.json();\r",
+									"\r",
+									"        pm.expect(json.type, \"Incorrect type\").to.equal(type);\r",
+									"        pm.expect(json.comment, \"Incorrect comment\").to.equal(comment);\r",
+									"        pm.expect(json.fromExternalId, \"Incorrect sender ID\").to.equal(fromId);\r",
+									"        for(let i in toIds){\r",
+									"            pm.expect(json.toExternalIds[i], \"Incorrect receivers IDs\").to.equal(toIds[i]);\r",
+									"        }\r",
+									"        \r",
+									"\r",
+									"    }\r",
+									"    \r",
+									"})\r",
+									"\r",
+									"pm.test(\"Shouldn't add marios\", function(){\r",
+									"\r",
+									"    let type = JSON.parse(pm.variables.get(\"type\"));\r",
+									"\r",
+									"    if(type == null || type == \"\" || (type != \"HAPPY\" && type != \"SAD\" && type != \"MAD\" && type != \"AMUSED\" && type != \"FUNNY\" && type != \"FOOTBALL\")) {\r",
+									"        pm.expect(pm.response.code, \"not 400\").to.equal(400);\r",
+									"\r",
+									"    }\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": {{type}},\r\n    \"comment\": {{comment}},\r\n    \"fromExternalId\": {{fromId}},\r\n    \"toExternalIds\": {{toIds}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/marios",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"marios"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TestPOSTUser",
+			"item": [
+				{
+					"name": "ShouldAddUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let user = pm.iterationData.get(\"user\");\r",
+									"\r",
+									"pm.variables.set(\"firstName\", JSON.stringify(user.firstName));\r",
+									"pm.variables.set(\"lastName\", JSON.stringify(user.lastName));\r",
+									"pm.variables.set(\"email\", JSON.stringify(user.email));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Should add user\", function(){\r",
+									"\r",
+									"    let regex = /^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/i;\r",
+									"    let firstName = JSON.parse(pm.variables.get(\"firstName\"));\r",
+									"    let lastName = JSON.parse(pm.variables.get(\"lastName\"));\r",
+									"    let email = JSON.parse(pm.variables.get(\"email\"));\r",
+									"\r",
+									"    if(firstName != null && firstName != \"\" && lastName != null && lastName != \"\" && email != \"\" && regex.test(email)) {\r",
+									"\r",
+									"        pm.expect(pm.response.code, \"not 200\").to.equal(200);\r",
+									"\r",
+									"        json = pm.response.json();\r",
+									"\r",
+									"        pm.expect(json.firstName).to.equal(firstName);\r",
+									"        pm.expect(json.lastName).to.equal(lastName);\r",
+									"        pm.expect(json.email).to.equal(email);\r",
+									"\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Shouldn't add user\", function(){\r",
+									"\r",
+									"    let regex = /^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/i;\r",
+									"    let firstName = JSON.parse(pm.variables.get(\"firstName\"));\r",
+									"    let lastName = JSON.parse(pm.variables.get(\"lastName\"));\r",
+									"    let email = JSON.parse(pm.variables.get(\"email\"));\r",
+									"\r",
+									"    if(firstName == null || firstName == \"\" || lastName == null || lastName == \"\" || email == \"\" || !regex.test(email)) {\r",
+									"\r",
+									"        pm.expect(pm.response.code, \"not 404\").to.equal(404);\r",
+									"\r",
+									"    }\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": {{firstName}},\r\n    \"lastName\": {{lastName}},\r\n    \"email\": {{email}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.collectionVariables.set(\"users\", pm.iterationData.get(\"users\"));",
+					"",
+					"const baseURL = pm.collectionVariables.get(\"baseURL\");",
+					"",
+					"let email = JSON.stringify(pm.collectionVariables.replaceIn(\"{{$randomEmail}}\"));",
+					"",
+					"let user1 = '{\"firstName\": \"Dariusz\",\"lastName\":\"Kowalski\",\"email\": ' + email + '}';",
+					"",
+					"email = JSON.stringify(pm.collectionVariables.replaceIn(\"{{$randomEmail}}\"));",
+					"",
+					"let user2 = '{\"firstName\": \"Mariusz\",\"lastName\":\"Kowalski\",\"email\": ' + email + '}';",
+					"",
+					"",
+					"let options1 = {",
+					"    url: baseURL+\"/users\",",
+					"    method: 'POST',",
+					"    header: {'content-type': 'application/json'},",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: user1",
+					"    }",
+					"};",
+					"",
+					"",
+					"let options2 = {",
+					"    url: baseURL+\"/users\",",
+					"    method: 'POST',",
+					"    header: {'content-type': 'application/json'},",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: user2",
+					"    }",
+					"};",
+					"",
+					"pm.sendRequest(options1, function(err, res){",
+					"    let json = res.json();",
+					"",
+					"    pm.collectionVariables.set(\"addedSenderId\", json.externalId);",
+					"    pm.collectionVariables.set(\"addedSender\", JSON.stringify(json));",
+					"",
+					"",
+					"    pm.sendRequest(options2, function(err, res){",
+					"        let json = res.json();",
+					"",
+					"        pm.collectionVariables.set(\"addedReceiverId\", json.externalId);",
+					"        pm.collectionVariables.set(\"addedReceiver\", JSON.stringify(json));",
+					"",
+					"        let set = new Set();",
+					"        set.add(pm.collectionVariables.get(\"addedReceiverId\"));",
+					"",
+					"",
+					"        let marios = '{\"type\": \"HAPPY\",\"comment\": \"Hello\", \"fromExternalId\": ' + JSON.stringify(pm.collectionVariables.get(\"addedSenderId\")) + ' ,\"toExternalIds\": ' + JSON.stringify([...set]) + '}';",
+					"",
+					"        let options3 = {",
+					"            url: baseURL+\"/marios\",",
+					"            method: 'POST',",
+					"            header: {'content-type': 'application/json'},",
+					"            body: {",
+					"                mode: 'raw',",
+					"                raw: marios",
+					"            }",
+					"        };",
+					"",
+					"        pm.sendRequest(options3, function(err, res){",
+					"            let json = res.json();",
+					"",
+					"            pm.collectionVariables.set(\"addedMariosId\", json.externalId);",
+					"            pm.collectionVariables.set(\"addedMarios\", JSON.stringify(json));",
+					"",
+					"        });",
+					"",
+					"    });",
+					"",
+					"});",
+					"",
+					"",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8083/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "addedSenderId",
+			"value": ""
+		},
+		{
+			"key": "addedReceiverId",
+			"value": ""
+		},
+		{
+			"key": "addedMariosId",
+			"value": ""
+		},
+		{
+			"key": "addedSender",
+			"value": ""
+		},
+		{
+			"key": "addedReceiver",
+			"value": ""
+		},
+		{
+			"key": "addedMarios",
+			"value": ""
+		},
+		{
+			"key": "users",
+			"value": ""
+		}
+	]
+}

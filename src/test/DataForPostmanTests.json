@@ -1,0 +1,68 @@
+[
+  {
+    "user": {
+        "firstName": "Mateusz",
+        "lastName": "Zwierzchowski",
+        "email": "abcdef@asdfg.com"
+      },
+    "marios": {
+      "type": "HAPPY",
+      "comment": "jej"
+    }
+  },
+  {
+    "user": {
+        "firstName": "",
+        "lastName": "Zwierzchowski",
+        "email": "@asdfg.com"
+    },
+    "marios": {
+      "type": "MAD",
+      "comment": ""
+    }
+  },
+  {
+    "user": {
+        "firstName": "Mateusz",
+        "lastName": "",
+        "email": "abcfdef@asdfg.com"
+    },
+    "marios": {
+      "type": "SAD",
+      "comment": "jej"
+    }
+  },
+  {
+    "user": {
+        "firstName": "Mateusz",
+        "lastName": "Zwierzchowski",
+        "email": ""
+    },
+    "marios": {
+      "type": "",
+      "comment": "jej"
+    }
+  },
+  {
+    "user": {
+        "firstName": "Mateusz",
+        "lastName": "Zwierzchowski",
+        "email": "abckef@asdgh."
+    },
+    "marios": {
+      "type": "AMUSED",
+      "comment": "jej"
+    }
+  },
+  {
+    "user": {
+        "firstName": "Mateusz",
+        "lastName": "Zwierzchowski",
+        "email": "abcdef@.com"
+    },
+    "marios": {
+      "type": "HAPPY",
+      "comment": "jej"
+    }
+  }
+]

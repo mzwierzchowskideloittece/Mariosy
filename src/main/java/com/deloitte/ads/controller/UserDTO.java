@@ -5,19 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+
 public class UserDTO {
-    @Getter @Setter
-    String email;
 
     @Getter @Setter
-    String firstName;
+    String userName;
 
-    @Getter @Setter
-    String lastName;
+    public UserDTO() {}
 
     public UserDTO(User user) {
-        this.email = user.getEmail();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
+        this.userName = user.getUserName();
     }
 }

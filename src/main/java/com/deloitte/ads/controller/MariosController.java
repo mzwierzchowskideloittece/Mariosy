@@ -4,10 +4,8 @@ import com.deloitte.ads.service.SomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/marios")
@@ -21,21 +19,13 @@ public class MariosController {
         this.someService = someService;
     }
 
-    @GetMapping()
-    public ResponseEntity<Set<MariosDTO>> getMariosSet() {
-
-        try {
-            return new ResponseEntity<>(someService.getMariosSet().stream().map(MariosDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping
-    public ResponseEntity<MariosDTO> addMarios(@RequestBody MariosDTO mariosDTO) {
+    public ResponseEntity<OutputMariosDTO> addMarios(@RequestBody InputMariosDTO inputMariosDTO, JwtAuthenticationToken authentication) {
 
         try {
-            return new ResponseEntity<>(new MariosDTO(someService.addMarios(mariosDTO.getType(), mariosDTO.getComment(), mariosDTO.getFromEmail(), mariosDTO.getToEmails())), HttpStatus.OK);
+            someService.getUserAndAddIfDoesNotExist(authentication.getName());
+
+            return new ResponseEntity<>(new OutputMariosDTO(someService.addMarios(inputMariosDTO.getTypeExternalId(), inputMariosDTO.getTitle(), inputMariosDTO.getComment(), authentication.getName(), inputMariosDTO.getUserNamesOfReceivers()), "sent"), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

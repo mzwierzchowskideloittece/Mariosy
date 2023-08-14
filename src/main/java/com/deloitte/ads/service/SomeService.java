@@ -1,18 +1,14 @@
 package com.deloitte.ads.service;
 
-import com.deloitte.ads.repository.Marios;
-import com.deloitte.ads.repository.MariosRepository;
-import com.deloitte.ads.repository.User;
-import com.deloitte.ads.repository.UserRepository;
+import com.deloitte.ads.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -22,11 +18,16 @@ public class SomeService {
 
     private final UserRepository userRepository;
 
+    private final MariosTypeRepository mariosTypeRepository;
+
     @Autowired
-    public SomeService(MariosRepository mariosRepository, UserRepository userRepository) {
+    public SomeService(MariosRepository mariosRepository, UserRepository userRepository, MariosTypeRepository mariosTypeRepository) {
         this.mariosRepository = mariosRepository;
         this.userRepository = userRepository;
+        this.mariosTypeRepository = mariosTypeRepository;
     }
+
+
 
     public Set<User> getUsers() {
 
@@ -36,79 +37,108 @@ public class SomeService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<Marios> getMariosSet() {
+    public List<Marios> get9LatestMariosListOfUser(User user) {
 
-        Iterable<Marios> mariosQueryResult = mariosRepository.findAll();
+        Stream<Marios> sentMariosStream = getReceivedMariosSetOfUser(user).stream();
+        Stream<Marios> recivedMariosStream = getSentMariosSetOfUser(user).stream();
+        List<Marios> latestMariosList = Stream.concat(sentMariosStream, recivedMariosStream).sorted(Marios::compare).collect(Collectors.toList());
 
-        return StreamSupport.stream(mariosQueryResult.spliterator(), false)
-                .collect(Collectors.toSet());
+        return latestMariosList.subList(0, Math.min(9, latestMariosList.size()));
+
+    }
+
+    public List<Marios> getSentMariosSetOfUser(User user) {
+
+        return user.getSentMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
+
+    }
+
+    public List<Marios> getReceivedMariosSetOfUser(User user) {
+
+        return user.getReceivedMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
+
+    }
+
+    public List<MariosType> getMariosTypes() {
+
+        Iterable<MariosType> mariosTypes = mariosTypeRepository.findAll();
+
+        return StreamSupport.stream(mariosTypes.spliterator(), false)
+                .collect(Collectors.toList());
+
     }
 
 
-    public Set<Marios> getSentMariosSetOfUser(String email) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
+    public User getUserAndAddIfDoesNotExist(String userName) {
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return user.getSentMariosSet();
+        Optional<User> userOptional = userRepository.findByUserName(userName);
+
+        return userOptional.orElseGet(() -> addUser(userName));
+
+    }
+
+
+    public User addUser(String userName) {
+
+        User newUser = User.createUser(userName);
+        userRepository.save(newUser);
+        return newUser;
+    }
+
+
+    public Marios addMarios(UUID typeExternalId, String title, String comment, String userNameOfSender, Set<String> userNamesOfReceivers) {
+
+        Marios newMarios = Marios.createMarios(title, comment);
+
+        Optional<MariosType> mariosTypeOptional= mariosTypeRepository.findByExternalId(typeExternalId);
+
+        if(mariosTypeOptional.isPresent()) {
+            newMarios.setType(mariosTypeOptional.get());
         } else {
-            return new HashSet<>();
+            throw new NoSuchElementException("Marios type doesn't exist");
         }
-    }
 
-    public Set<Marios> getReceivedMariosSetOfUser(String email) {
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            return user.getReceivedMariosSet();
-        } else {
-            return new HashSet<>();
-        }
-    }
-
-    public Marios addMarios(Marios.TypeEnum type, String comment, String fromEmail, Set<String> toEmails) {
-
-        Optional<User> fromUserOptional= userRepository.findByEmail(fromEmail);
-
-        Marios newMarios = Marios.createMarios(type, comment);
+        Optional<User> fromUserOptional= userRepository.findByUserName(userNameOfSender);
 
         if(fromUserOptional.isPresent()) {
             newMarios.setSender(fromUserOptional.get());
         } else {
-            throw new IllegalArgumentException("Sender doesn't exist");
+            throw new NoSuchElementException("Sender doesn't exist");
         }
 
-        Set<User> set = toEmails.stream().map(email -> {
-            Optional<User> toUserOptional = userRepository.findByEmail(email);
+
+
+        Set<User> set = userNamesOfReceivers.stream().map(userName -> {
+            Optional<User> toUserOptional = userRepository.findByUserName(userName);
             return toUserOptional.orElse(null);
         }).filter(Objects::nonNull).collect(Collectors.toSet());
 
         if(set.isEmpty()){
-            throw new IllegalArgumentException("None of receivers exist");
+            throw new NoSuchElementException("None of receivers exist");
         }
 
         newMarios.setReceivers(set);
+
+
         mariosRepository.save(newMarios);
 
         return newMarios;
     }
 
-    public User addUser(String email, String firstName, String lastName) {
 
-        User newUser = User.createUser(email, firstName, lastName);
-        userRepository.save(newUser);
-        return newUser;
+    public MariosType addMariosType(String type) {
+
+        MariosType newMariosType = MariosType.createMariosType(type);
+        mariosTypeRepository.save(newMariosType);
+        return newMariosType;
     }
 
 /*    @PostConstruct
     public void aaa() {
-        User user1 = addUser("xyz@abcd.pl", "Mario", "Mariowski");
-        User user2 = addUser("abcd@xyz.pl", "Luigi", "Luigiowski");
-        Set<User> set = new HashSet<>();
-        set.add(user2);
 
-        addMarios(Marios.TypeEnum.HAPPY, "Hello", user1.getEmail(), set.stream().map(user -> user.getEmail()).collect(Collectors.toSet()));
-    }*/
+        MariosType newMariosType = addMariosType("WOW!");
+
+       }*/
 }

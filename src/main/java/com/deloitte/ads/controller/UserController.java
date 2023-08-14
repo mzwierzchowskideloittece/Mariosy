@@ -1,12 +1,14 @@
 package com.deloitte.ads.controller;
 
+import com.deloitte.ads.repository.User;
 import com.deloitte.ads.service.SomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,42 +24,63 @@ public class UserController {
 
 
     @GetMapping()
-    public ResponseEntity<Set<UserDTO>> getAllUsers() {
+    public ResponseEntity<Set<UserDTO>> getAllUsers(JwtAuthenticationToken authentication) {
 
         try {
-            return new ResponseEntity<>(someService.getUsers().stream().map(UserDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
+            someService.getUserAndAddIfDoesNotExist(authentication.getName());
+
+            return new ResponseEntity<>(someService.getUsers().stream().filter(user -> !authentication.getName().equals(user.getUserName())).map(UserDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("{email}/sent")
-    public ResponseEntity<Set<MariosDTO>> getSentMariosSetOfUser(@PathVariable String email) {
+
+    @GetMapping("latest")
+    public ResponseEntity<List<OutputMariosDTO>> get9LatestMariosListOfUser(JwtAuthenticationToken authentication) {
 
         try {
-            return new ResponseEntity<>(someService.getSentMariosSetOfUser(email).stream().map(MariosDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
+
+            User user = someService.getUserAndAddIfDoesNotExist(authentication.getName());
+
+            List<OutputMariosDTO> latestMariosListOfUser = someService.get9LatestMariosListOfUser(user).stream().map(marios -> {
+                if(marios.getSender().getUserName().equals(user.getUserName())) { return new OutputMariosDTO(marios, "sent"); }
+                else { return new OutputMariosDTO(marios, "received"); }
+
+            }).collect(Collectors.toList());
+
+            return new ResponseEntity<>(latestMariosListOfUser, HttpStatus.OK);
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @GetMapping("sent")
+    public ResponseEntity<List<OutputMariosDTO>> getSentMariosSetOfUser(JwtAuthenticationToken authentication) {
+
+        try {
+
+            User user = someService.getUserAndAddIfDoesNotExist(authentication.getName());
+
+            return new ResponseEntity<>(someService.getSentMariosSetOfUser(user).stream().map(marios -> new OutputMariosDTO(marios, "sent")).collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("{email}/received")
-    public ResponseEntity<Set<MariosDTO>> getReceivedMariosSetOfUser(@PathVariable String email) {
+    @GetMapping("received")
+    public ResponseEntity<List<OutputMariosDTO>> getReceivedMariosSetOfUser(JwtAuthenticationToken authentication) {
 
         try {
-            return new ResponseEntity<>(someService.getReceivedMariosSetOfUser(email).stream().map(MariosDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
+
+            User user = someService.getUserAndAddIfDoesNotExist(authentication.getName());
+
+            return new ResponseEntity<>(someService.getReceivedMariosSetOfUser(user).stream().map(marios -> new OutputMariosDTO(marios, "received")).collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PostMapping
-    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
-
-        try {
-            return new ResponseEntity<>(new UserDTO(someService.addUser(userDTO.getEmail(), userDTO.getFirstName(), userDTO.getLastName())), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }
