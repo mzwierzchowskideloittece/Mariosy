@@ -17,12 +17,6 @@ i
 9src/main/java/com/deloitte/ads/keycloak/JwtConverter.java,d\8\d86e2feb53c66c0a56ff949981d1995b6a124161
 W
 'src/test/Marios.postman_collection.json,5\d\5da8446c2733c727ddf87cd095d976a8eac3490f
-o
-?src/main/java/com/deloitte/ads/controller/MariosController.java,3\3\337d1a28ec9d416f4761080b412f465a3ab964fb
-i
-9src/main/java/com/deloitte/ads/repository/MariosType.java,6\a\6a08dc9981450fcec547d6e904f8b4b0ec7a3672
-s
-Csrc/main/java/com/deloitte/ads/controller/MariosTypeController.java,8\7\87d101c6912abb23a3149fc169611361bf38c8fc
 s
 Csrc/main/java/com/deloitte/ads/repository/MariosTypeRepository.java,6\1\6175ee41bbc2dbb054e5202e03343b182ad4a6a6
 7
