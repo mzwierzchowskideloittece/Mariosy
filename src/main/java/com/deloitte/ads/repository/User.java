@@ -14,6 +14,10 @@ public class User {
     @Getter
     private Long id;
 
+    @Column(name = "user_externalId", unique = true)
+    @Getter
+    private UUID externalId;
+
     @Column(name = "user_name", unique = true)
     @Getter
     private String userName;
@@ -29,6 +33,7 @@ public class User {
     public User() {}
 
     private User(String userName) {
+        this.externalId = UUID.randomUUID();
         this.userName = userName;
         this.sentMariosList = new ArrayList<>();
         this.receivedMariosList = new ArrayList<>();

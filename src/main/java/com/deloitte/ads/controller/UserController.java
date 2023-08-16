@@ -1,12 +1,9 @@
 package com.deloitte.ads.controller;
 
-import com.deloitte.ads.repository.User;
 import com.deloitte.ads.service.SomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -25,27 +22,25 @@ public class UserController {
 
 
     @GetMapping()
-    public ResponseEntity<Set<UserDTO>> getAllUsers(JwtAuthenticationToken authentication) {
+    public ResponseEntity<Set<UserDTO>> getAllUsers() {
 
         try {
-            someService.getUserAndAddIfDoesNotExist(authentication.getName());
 
-            return new ResponseEntity<>(someService.getUsers().stream().filter(user -> !authentication.getName().equals(user.getUserName())).map(UserDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
+            return new ResponseEntity<>(someService.getUsers().stream().map(UserDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 
-    @GetMapping("latest")
-    public ResponseEntity<List<OutputMariosDTO>> get9LatestMariosListOfUser(JwtAuthenticationToken authentication) {
+    @GetMapping("{externalId}/latest")
+    public ResponseEntity<List<OutputMariosDTO>> get9LatestMariosListOfUser(@PathVariable UUID externalId) {
 
         try {
 
-            User user = someService.getUserAndAddIfDoesNotExist(authentication.getName());
 
-            List<OutputMariosDTO> latestMariosListOfUser = someService.get9LatestMariosListOfUser(user).stream().map(marios -> {
-                if(marios.getSender().getUserName().equals(user.getUserName())) { return new OutputMariosDTO(marios, "sent"); }
+            List<OutputMariosDTO> latestMariosListOfUser = someService.get9LatestMariosListOfUser(externalId).stream().map(marios -> {
+                if(marios.getSender().getUserName().equals(someService.getUser(externalId).getUserName())) { return new OutputMariosDTO(marios, "sent"); }
                 else { return new OutputMariosDTO(marios, "received"); }
 
             }).collect(Collectors.toList());
@@ -58,27 +53,23 @@ public class UserController {
     }
 
 
-    @GetMapping("sent")
-    public ResponseEntity<List<OutputMariosDTO>> getSentMariosSetOfUser(JwtAuthenticationToken authentication) {
+    @GetMapping("{externalId}/sent")
+    public ResponseEntity<List<OutputMariosDTO>> getSentMariosSetOfUser(@PathVariable UUID externalId) {
 
         try {
 
-            User user = someService.getUserAndAddIfDoesNotExist(authentication.getName());
-
-            return new ResponseEntity<>(someService.getSentMariosSetOfUser(user).stream().map(marios -> new OutputMariosDTO(marios, "sent")).collect(Collectors.toList()), HttpStatus.OK);
+            return new ResponseEntity<>(someService.getSentMariosSetOfUser(externalId).stream().map(marios -> new OutputMariosDTO(marios, "sent")).collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("received")
-    public ResponseEntity<List<OutputMariosDTO>> getReceivedMariosSetOfUser(JwtAuthenticationToken authentication) {
+    @GetMapping("{externalId}/received")
+    public ResponseEntity<List<OutputMariosDTO>> getReceivedMariosSetOfUser(@PathVariable UUID externalId) {
 
         try {
 
-            User user = someService.getUserAndAddIfDoesNotExist(authentication.getName());
-
-            return new ResponseEntity<>(someService.getReceivedMariosSetOfUser(user).stream().map(marios -> new OutputMariosDTO(marios, "received")).collect(Collectors.toList()), HttpStatus.OK);
+            return new ResponseEntity<>(someService.getReceivedMariosSetOfUser(externalId).stream().map(marios -> new OutputMariosDTO(marios, "received")).collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

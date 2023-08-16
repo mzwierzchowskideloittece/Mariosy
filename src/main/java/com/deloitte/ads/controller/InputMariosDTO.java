@@ -19,7 +19,10 @@ public class InputMariosDTO {
     private String comment;
 
     @Getter @Setter
-    private Set<String> userNamesOfReceivers;
+    private UUID externalIdOfSender;
+
+    @Getter @Setter
+    private Set<UUID> externalIdsOfReceivers;
 
     public InputMariosDTO(){}
 

@@ -4,7 +4,6 @@ import com.deloitte.ads.service.SomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,12 +19,11 @@ public class MariosController {
     }
 
     @PostMapping
-    public ResponseEntity<OutputMariosDTO> addMarios(@RequestBody InputMariosDTO inputMariosDTO, JwtAuthenticationToken authentication) {
+    public ResponseEntity<OutputMariosDTO> addMarios(@RequestBody InputMariosDTO inputMariosDTO) {
 
         try {
-            someService.getUserAndAddIfDoesNotExist(authentication.getName());
 
-            return new ResponseEntity<>(new OutputMariosDTO(someService.addMarios(inputMariosDTO.getTypeExternalId(), inputMariosDTO.getTitle(), inputMariosDTO.getComment(), authentication.getName(), inputMariosDTO.getUserNamesOfReceivers()), "sent"), HttpStatus.OK);
+            return new ResponseEntity<>(new OutputMariosDTO(someService.addMarios(inputMariosDTO.getTypeExternalId(), inputMariosDTO.getTitle(), inputMariosDTO.getComment(), inputMariosDTO.getExternalIdOfSender(), inputMariosDTO.getExternalIdsOfReceivers()), "sent"), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -1,9 +1,8 @@
 package com.deloitte.ads.service;
 
 import com.deloitte.ads.repository.*;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -30,6 +29,17 @@ public class SomeService {
 
 
 
+    public User getUser(UUID externalId) {
+
+        Optional<User> userOptional = userRepository.findByExternalId(externalId);
+
+        if(userOptional.isPresent()) {
+            return userOptional.get();
+        }  else {
+            throw new NoSuchElementException("No such user");
+        }
+    }
+
     public Set<User> getUsers() {
 
         Iterable<User> users = userRepository.findAll();
@@ -38,25 +48,25 @@ public class SomeService {
                 .collect(Collectors.toSet());
     }
 
-    public List<Marios> get9LatestMariosListOfUser(User user) {
+    public List<Marios> get9LatestMariosListOfUser(UUID externalId) {
 
-        Stream<Marios> sentMariosStream = getReceivedMariosSetOfUser(user).stream();
-        Stream<Marios> recivedMariosStream = getSentMariosSetOfUser(user).stream();
+        Stream<Marios> sentMariosStream = getReceivedMariosSetOfUser(externalId).stream();
+        Stream<Marios> recivedMariosStream = getSentMariosSetOfUser(externalId).stream();
         List<Marios> latestMariosList = Stream.concat(sentMariosStream, recivedMariosStream).sorted(Marios::compare).collect(Collectors.toList());
 
         return latestMariosList.subList(0, Math.min(9, latestMariosList.size()));
 
     }
 
-    public List<Marios> getSentMariosSetOfUser(User user) {
+    public List<Marios> getSentMariosSetOfUser(UUID externalId) {
 
-        return user.getSentMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
+        return getUser(externalId).getSentMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
 
     }
 
-    public List<Marios> getReceivedMariosSetOfUser(User user) {
+    public List<Marios> getReceivedMariosSetOfUser(UUID externalId) {
 
-        return user.getReceivedMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
+        return getUser(externalId).getReceivedMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
 
     }
 
@@ -70,15 +80,6 @@ public class SomeService {
     }
 
 
-    public User getUserAndAddIfDoesNotExist(String userName) {
-
-        Optional<User> userOptional = userRepository.findByUserName(userName);
-
-        return userOptional.orElseGet(() -> addUser(userName));
-
-    }
-
-
     public User addUser(String userName) {
 
         User newUser = User.createUser(userName);
@@ -87,7 +88,7 @@ public class SomeService {
     }
 
 
-    public Marios addMarios(UUID typeExternalId, String title, String comment, String userNameOfSender, Set<String> userNamesOfReceivers) {
+    public Marios addMarios(UUID typeExternalId, String title, String comment, UUID externalIdOfSender, Set<UUID> externalIdsOfReceivers) {
 
         Marios newMarios = Marios.createMarios(title, comment);
 
@@ -101,7 +102,7 @@ public class SomeService {
 
 
 
-        Optional<User> fromUserOptional= userRepository.findByUserName(userNameOfSender);
+        Optional<User> fromUserOptional= userRepository.findByExternalId(externalIdOfSender);
 
         if(fromUserOptional.isPresent()) {
             newMarios.setSender(fromUserOptional.get());
@@ -111,8 +112,8 @@ public class SomeService {
 
 
 
-        Set<User> set = userNamesOfReceivers.stream().map(userName -> {
-            Optional<User> toUserOptional = userRepository.findByUserName(userName);
+        Set<User> set = externalIdsOfReceivers.stream().map(externalId -> {
+            Optional<User> toUserOptional = userRepository.findByExternalId(externalId);
             return toUserOptional.orElse(null);
         }).filter(Objects::nonNull).collect(Collectors.toSet());
 
@@ -136,10 +137,19 @@ public class SomeService {
         return newMariosType;
     }
 
-/*    @PostConstruct
+    @PostConstruct
     public void aaa() {
 
         MariosType newMariosType = addMariosType("WOW!");
 
-       }*/
+        User user1 = this.addUser("Mario_Mariowski");
+
+        User user2 = this.addUser("Luigi_Luigiowski");
+
+        Set<UUID> set = new HashSet<>();
+        set.add(user2.getExternalId());
+
+       this.addMarios(newMariosType.getExternalId(), "Title", "Comment", user1.getExternalId(), set);
+
+       }
 }
