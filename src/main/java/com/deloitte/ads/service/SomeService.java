@@ -1,17 +1,11 @@
 package com.deloitte.ads.service;
 
-import com.deloitte.ads.repository.Marios;
-import com.deloitte.ads.repository.MariosRepository;
-import com.deloitte.ads.repository.User;
-import com.deloitte.ads.repository.UserRepository;
+import com.deloitte.ads.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -21,11 +15,13 @@ public class SomeService {
     private final MariosRepository mariosRepository;
 
     private final UserRepository userRepository;
+    private final MariosTypeRepository mariosTypeRepository;
 
     @Autowired
-    public SomeService(MariosRepository mariosRepository, UserRepository userRepository) {
+    public SomeService(MariosRepository mariosRepository, UserRepository userRepository, MariosTypeRepository mariosTypeRepository) {
         this.mariosRepository = mariosRepository;
         this.userRepository = userRepository;
+        this.mariosTypeRepository = mariosTypeRepository;
     }
 
     public Set<User> getUsers() {
@@ -42,6 +38,15 @@ public class SomeService {
 
         return StreamSupport.stream(mariosQueryResult.spliterator(), false)
                 .collect(Collectors.toSet());
+    }
+
+    public List<MariosType> getMariosTypes() {
+
+        Iterable<MariosType> mariosTypes = mariosTypeRepository.findAll();
+
+        return StreamSupport.stream(mariosTypes.spliterator(), false)
+                .collect(Collectors.toList());
+
     }
 
 
@@ -102,13 +107,26 @@ public class SomeService {
         return newUser;
     }
 
+
+    public MariosType addMariosType(String type) {
+
+        MariosType newMariosType = MariosType.createMariosType(type);
+        mariosTypeRepository.save(newMariosType);
+        return newMariosType;
+    }
+
+
+
 /*    @PostConstruct
     public void aaa() {
+
+        MariosType newMariosType = addMariosType("WOW!");
+
         User user1 = addUser("xyz@abcd.pl", "Mario", "Mariowski");
         User user2 = addUser("abcd@xyz.pl", "Luigi", "Luigiowski");
         Set<User> set = new HashSet<>();
         set.add(user2);
 
-        addMarios(Marios.TypeEnum.HAPPY, "Hello", user1.getEmail(), set.stream().map(user -> user.getEmail()).collect(Collectors.toSet()));
+        addMarios(newMariosType, "Hello", user1.getEmail(), set.stream().map(user -> user.getEmail()).collect(Collectors.toSet()));
     }*/
 }
