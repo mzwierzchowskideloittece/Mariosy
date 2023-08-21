@@ -1,8 +1,6 @@
 
 o
 ?src/main/java/com/deloitte/ads/repository/MariosRepository.java,c\0\c08c0ed250afe93fbbab73d2d2ca0333bb985e6e
-X
-(src/main/java/com/deloitte/ads/Main.java,4\b\4bdb12e1eb572c620e56752803f4cc0d80d0557e
 w
 G.idea/sonarlint/issuestore/c/0/c08c0ed250afe93fbbab73d2d2ca0333bb985e6e,d\a\dae8562bea96882ac8af5230f5eb25c9dd19c90b
 w
@@ -13,11 +11,7 @@ Q.idea/sonarlint/securityhotspotstore/c/0/c08c0ed250afe93fbbab73d2d2ca0333bb985e
 Q.idea/sonarlint/securityhotspotstore/4/b/4bdb12e1eb572c620e56752803f4cc0d80d0557e,9\5\95620cce6442c3d2f6f890460a6e5a9122e2f8ab
 Q
 !src/test/DataForPostmanTests.json,a\2\a295c5b52904b6387d4902dd4ffbcfb310457c14
-i
-9src/main/java/com/deloitte/ads/keycloak/JwtConverter.java,d\8\d86e2feb53c66c0a56ff949981d1995b6a124161
 W
 'src/test/Marios.postman_collection.json,5\d\5da8446c2733c727ddf87cd095d976a8eac3490f
-s
-Csrc/main/java/com/deloitte/ads/repository/MariosTypeRepository.java,6\1\6175ee41bbc2dbb054e5202e03343b182ad4a6a6
-7
-pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
+e
+5src/main/java/com/deloitte/ads/repository/Marios.java,b\7\b7cffb7cf585b63093a3f06f0977b767d08150c4
