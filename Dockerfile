@@ -1,5 +1,5 @@
 FROM amazoncorretto:17
-EXPOSE 8080
+EXPOSE 3000 5432 80
 VOLUME /tmp
-COPY target/*.jar example-1.jar
-ENTRYPOINT ["java","-jar","/example-1.jar"]
+COPY target/*.jar Mariosy-1.jar
+ENTRYPOINT ["java","-jar","/Mariosy-1.jar"]

@@ -15,3 +15,17 @@ W
 'src/test/Marios.postman_collection.json,5\d\5da8446c2733c727ddf87cd095d976a8eac3490f
 e
 5src/main/java/com/deloitte/ads/repository/Marios.java,b\7\b7cffb7cf585b63093a3f06f0977b767d08150c4
+n
+>src/main/java/com/deloitte/ads/controller/OutputMariosDTO.java,e\6\e654cb0d0ab05208f74caf0ba720fc8f85adfdba
+l
+<src/main/java/com/deloitte/ads/controller/MariosTypeDTO.java,7\f\7f73e9089891e033259251399a59b61325bd3158
+f
+6src/main/java/com/deloitte/ads/controller/UserDTO.java,e\0\e05144ae4090937288a978dfeb3e687bf7b9c6ca
+m
+=src/main/java/com/deloitte/ads/controller/InputMariosDTO.java,f\0\f00a9440d3b14187671e6e6d1b2dadd0d5db6a62
+m
+=src/main/java/com/deloitte/ads/controller/UserController.java,c\f\cf180460af741f99f0b61897f69a3306cabd591c
+g
+7src/main/java/com/deloitte/ads/service/SomeService.java,f\e\fe05b41bb0ab5eda44d52862c326f76d27d8289a
+s
+Csrc/main/java/com/deloitte/ads/controller/MariosTypeController.java,8\7\87d101c6912abb23a3149fc169611361bf38c8fc
