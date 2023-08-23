@@ -25,7 +25,5 @@ f
 6src/main/java/com/deloitte/ads/controller/UserDTO.java,e\0\e05144ae4090937288a978dfeb3e687bf7b9c6ca
 m
 =src/main/java/com/deloitte/ads/controller/InputMariosDTO.java,f\0\f00a9440d3b14187671e6e6d1b2dadd0d5db6a62
-m
-=src/main/java/com/deloitte/ads/controller/UserController.java,c\f\cf180460af741f99f0b61897f69a3306cabd591c
 s
 Csrc/main/java/com/deloitte/ads/controller/MariosTypeController.java,8\7\87d101c6912abb23a3149fc169611361bf38c8fc
