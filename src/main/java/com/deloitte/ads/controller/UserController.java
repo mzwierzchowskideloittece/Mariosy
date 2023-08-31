@@ -58,7 +58,7 @@ public class UserController {
 
         try {
 
-            return new ResponseEntity<>(someService.getSentMariosSetOfUser(externalId).stream().map(marios -> new OutputMariosDTO(marios, "sent")).collect(Collectors.toList()), HttpStatus.OK);
+            return new ResponseEntity<>(someService.getSentMariosListOfUser(externalId).stream().map(marios -> new OutputMariosDTO(marios, "sent")).collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -69,7 +69,7 @@ public class UserController {
 
         try {
 
-            return new ResponseEntity<>(someService.getReceivedMariosSetOfUser(externalId).stream().map(marios -> new OutputMariosDTO(marios, "received")).collect(Collectors.toList()), HttpStatus.OK);
+            return new ResponseEntity<>(someService.getReceivedMariosListOfUser(externalId).stream().map(marios -> new OutputMariosDTO(marios, "received")).collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -1,7 +1,6 @@
 package com.deloitte.ads.service;
 
 import com.deloitte.ads.repository.*;
-import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,21 +49,21 @@ public class SomeService {
 
     public List<Marios> get9LatestMariosListOfUser(UUID externalId) {
 
-        Stream<Marios> sentMariosStream = getReceivedMariosSetOfUser(externalId).stream();
-        Stream<Marios> recivedMariosStream = getSentMariosSetOfUser(externalId).stream();
+        Stream<Marios> sentMariosStream = getReceivedMariosListOfUser(externalId).stream();
+        Stream<Marios> recivedMariosStream = getSentMariosListOfUser(externalId).stream();
         List<Marios> latestMariosList = Stream.concat(sentMariosStream, recivedMariosStream).sorted(Marios::compare).collect(Collectors.toList());
 
         return latestMariosList.subList(0, Math.min(9, latestMariosList.size()));
 
     }
 
-    public List<Marios> getSentMariosSetOfUser(UUID externalId) {
+    public List<Marios> getSentMariosListOfUser(UUID externalId) {
 
         return getUser(externalId).getSentMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
 
     }
 
-    public List<Marios> getReceivedMariosSetOfUser(UUID externalId) {
+    public List<Marios> getReceivedMariosListOfUser(UUID externalId) {
 
         return getUser(externalId).getReceivedMariosList().stream().sorted(Marios::compare).collect(Collectors.toList());
 
@@ -141,6 +140,7 @@ public class SomeService {
     public void aaa() {
 
         MariosType newMariosType = addMariosType("WOW!");
+        addMariosType("Thank You!");
 
         User user1 = this.addUser("Mario_Mariowski");
 
